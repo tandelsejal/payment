@@ -8,8 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "user")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,7 +19,7 @@ public class User {
 	private String sName;
 	private String sEmail;
 	private String sPhone;
-	private UserType userType;
+	private String userType;
 	private String sPassword;
 	
 	@OneToMany(mappedBy = "user")
@@ -37,11 +39,11 @@ public class User {
 		this.sPassword = sPassword;
 	}
 
-	public UserType getUserType() {
+	public String getUserType() {
 		return userType;
 	}
 
-	public void setUserType(UserType userType) {
+	public void setUserType(String userType) {
 		this.userType = userType;
 	}
 

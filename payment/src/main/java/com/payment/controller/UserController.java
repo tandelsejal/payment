@@ -1,11 +1,14 @@
 package com.payment.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.payment.Exception.UserException;
 import com.payment.Service.UserService;
@@ -18,7 +21,7 @@ import com.payment.repository.CardRepository;
 import com.payment.repository.MerchantRepository;
 import com.payment.repository.UserReposiroty;
 
-@RestController
+@Controller
 public class UserController {
 
 	@Autowired
@@ -35,9 +38,16 @@ public class UserController {
 	
 	@Autowired
 	AddressRepository addressRepo;
-
-	@PostMapping(value = "/user/register/")
-	public User registerUser(@RequestBody User user, @RequestBody Address address) throws UserException {
+	
+	@GetMapping("/registration")
+	public String registrationForm(Model model) {
+		model.addAttribute("registration", new User());
+		return "registration";
+	}
+	
+	@PostMapping(value = "/registration")
+	public String registerUser(@ModelAttribute User user, @ModelAttribute Address address, Model model) throws UserException {
+		model.addAttribute("registration", new User());
 		if (userSer.emailExist(user.getsEmail())) {
 			throw new UserException("This Email is already available in the system..." + user.getsEmail());
 		} else {
@@ -48,7 +58,8 @@ public class UserController {
 			temp.addAddress(address);
 			temp.setUserType(user.getUserType());
 			temp.setsPassword(user.getsPassword());
-			return userRepo.save(temp);
+			userRepo.save(temp);
+			return "login";
 		}
 	}
 
